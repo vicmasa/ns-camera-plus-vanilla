@@ -17,6 +17,7 @@ exports.pageLoaded = function (args) {
     ViewModel.set('repeater', []);
     ViewModel.set('isImage', true);
     ViewModel.set('loaded', false);
+    ViewModel.set('intents', 0);
 }
 
 exports.camLoaded = function (args) {
@@ -71,6 +72,7 @@ exports.toggleTheCamera = function (args) {
 exports.takePicFromCam = function (args) {
     console.log('takePicFromCam()');
     ViewModel.set('loaded', true);
+    ViewModel.set('intents', ViewModel.get('intents') + 1);
     cam.requestCameraPermissions().then(() => {
         // if (!cam) {
         //     cam = new CameraPlus();
@@ -82,7 +84,8 @@ exports.takePicFromCam = function (args) {
         });
     });
 }
-exports.tapReset = function (){
-    ViewModel.set('repeater',[]);
-    page.getViewById('repeater').refresh(); 
+exports.tapReset = function () {
+    ViewModel.set('repeater', []);
+    page.getViewById('repeater').refresh();
+    ViewModel.set('intents', 0);
 }
