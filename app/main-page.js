@@ -10,6 +10,7 @@ const CameraPlus = require('@nstudio/nativescript-camera-plus').CameraPlus;
 
 let page;
 let cam = undefined;
+let isInit = true;
 exports.pageLoaded = function (args) {
     page = args.object;
     page.bindingContext = ViewModel;
@@ -17,22 +18,41 @@ exports.pageLoaded = function (args) {
     ViewModel.set('isImage', true);
     ViewModel.set('loaded', false);
 }
+
 exports.camLoaded = function (args) {
     console.log(`cam loaded event`);
     try {
         cam = args.object;
-        // const flashMode = args.object.getFlashMode();
-        // console.log(`flashMode in loaded event = ${flashMode}`);
+        if (isInit) {
+            isInit = false;
+            console.log('NEW LISTENER');
+            cam.on(CameraPlus.photoCapturedEvent, (event) => {
+                onEvent(event);
+            });
+        }
     } catch (e) {
         console.log(e);
     }
 }
 
+function setContent(file) {
+    console.log(file.android)
+    const repeater = ViewModel.get('repeater');
+    repeater.unshift({
+        isImage: true,
+        src: file.android
+    })
+    ViewModel.set('repeater', repeater);
+    page.getViewById('repeater').refresh();
+    ViewModel.set('loaded', true);
+}
+
 function onEvent(args) {
     console.log('onEvent()');
     console.dir(args);
-    console.dir(args.data);
+    //console.dir(args.data);
     ViewModel.set('testImage', '');
+    setContent(args.data);
 }
 
 exports.toggleFlashOnCam = function (args) {
@@ -50,9 +70,7 @@ exports.toggleTheCamera = function (args) {
 
 exports.takePicFromCam = function (args) {
     console.log('takePicFromCam()');
-    cam.on(CameraPlus.photoCapturedEvent, (event) => {
-        onEvent(event);
-    });
+    ViewModel.set('loaded', true);
     cam.requestCameraPermissions().then(() => {
         // if (!cam) {
         //     cam = new CameraPlus();
@@ -63,4 +81,8 @@ exports.takePicFromCam = function (args) {
             width: 90
         });
     });
+}
+exports.tapReset = function (){
+    ViewModel.set('repeater',[]);
+    page.getViewById('repeater').refresh(); 
 }

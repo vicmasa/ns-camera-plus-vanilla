@@ -9,22 +9,35 @@
         <Label text="Anything else can go in your page or you can let the camera take up entire page layout. You can also add layout containers inside the CameraPlus to overlay view elements over the camera preview if needed." textWrap="true" />
       </StackLayout>
 
-      <Cam:CameraPlus height="120" id="camPlus" loaded="camLoaded" galleryPickerMode="multiple" enableVideo="true" confirmVideo="false" saveToGallery="true" showCaptureIcon="true" showGalleryIcon="true" showToggleIcon="true" showFlashIcon="true" confirmPhotos="true" flashOffIcon="icon" autoSquareCrop="true" insetButtons="true" insetButtonsPercent="0.02" imagesSelectedEvent="{{ imagesSelectedBinding }}" debug="true">
+      <Cam:CameraPlus height="120" id="camPlus" loaded="camLoaded" galleryPickerMode="multiple" enableVideo="true" confirmVideo="false" saveToGallery="true" showCaptureIcon="false" showGalleryIcon="false" showToggleIcon="false" showFlashIcon="false" confirmPhotos="true" flashOffIcon="icon" autoSquareCrop="true" insetButtons="true" insetButtonsPercent="0.02" imagesSelectedEvent="{{ imagesSelectedBinding }}" debug="true">
 
         <!--<GridLayout rows="auto, *, auto" columns="auto, *, auto"><Button row="0" col="0" text="Flash" class="btn-transparent" tap="{{ toggleFlash }}" /><Button row="0" col="2" text="Camera" class="btn-transparent" tap="{{ toggleCamera }}" /><Image row="1" col="1" horizontalAlignment="center" verticalAlignment="center" src="https://img.clipartfest.com/4ec5e2315cea92482da5546e1e7fca89_-pinterest-cute-clipart-snowman-clipart-transparent-background_300-300.png" stretch="none" /><Button row="2" col="0" text="Gallery" class="btn-transparent" tap="{{ openGallery }}" /><Button row="2" col="2" text="Take" class="btn-transparent" tap="{{ takePic }}" /></GridLayout>-->
-      </Cam:CameraPlus>
+      </Cam:CameraPlus> 
 
       <Image height="150" id="testImagePickResult" src="{{ testImage }}" stretch="aspectFit" />
-      <StackLayout class="p-10">
-        <Label text="The buttons below are using the public methods for the Camera Plus." textWrap="true" />
-      </StackLayout>
-      <GridLayout rows="auto, auto, auto, auto" columns="*, *">
+      
+      <ScrollView orientation="horizontal">
+          <Repeater id="repeater" items="{{ repeater }}">
+              <Repeater.itemsLayout>
+                  <StackLayout orientation="horizontal" backgroundColor="#e1e1e1"/>
+              </Repeater.itemsLayout>  
+              <Repeater.itemTemplate> 
+                  <GridLayout>
+                      <Image height="120" src="{{ src }}" visibility="{{isImage?'visible':'collapsed'}}" />
+                      <!-- <video:Video width="90" height="120" src="{{src}}" visibility="{{isImage ? 'collapsed' : 'visible'}}" /> -->
+                  </GridLayout>
+              </Repeater.itemTemplate>
+          </Repeater>
+      </ScrollView>
+
+      <GridLayout rows="auto, auto, auto, auto, auto" columns="*, *">
         <Button text="Record Video" tap="recordDemoVideo" row="0" col="0" class="btn btn-primary" />
         <Button text="Stop Recording" tap="stopRecordingDemoVideo" row="0" col="1" class="btn btn-primary" />
         <Button text="Take Pic" tap="takePicFromCam" row="1" col="0" class="btn btn-primary" />
         <Button text="Toggle Flash" tap="toggleFlashOnCam" row="1" col="1" class="btn btn-primary" />
         <Button text="Toggle Camera" tap="toggleTheCamera" row="2" col="0" class="btn btn-primary" />
         <Button text="Open Library" tap="openCamPlusLibrary" row="2" col="1" class="btn btn-primary" />
+        <Button text="RESET REPEAT" tap="tapReset" row="5" colSpan="2" class="btn btn-primary" /> 
       </GridLayout>
 
 
